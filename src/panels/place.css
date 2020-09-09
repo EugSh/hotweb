@@ -304,3 +304,8 @@
 .Place_order .Place__footer {
   position: static;
 }
+
+.Place__order__disabled{
+  background-color: #545454;
+  pointer-events: none;
+}
