@@ -9,9 +9,11 @@ import './place.css';
 
 
 const Basket = ({ match: { params: { areaId, itemId }}, foodAreas, order }) => {
-  const [ faster, setFaster ] = useState(true);
-  const [ time, setTime ] = useState('');
-  const [ selfService, setSelfService ] = useState(false);
+    const defaultOrderSetting = {faster: true, time:'', selfService: false};
+    const orderSetting= JSON.parse((localStorage.getItem('orderSetting') || 'null')) || defaultOrderSetting;
+  const [ faster, setFaster ] = useState(orderSetting.faster);
+  const [ time, setTime ] = useState(orderSetting.time);
+  const [ selfService, setSelfService ] = useState(orderSetting.selfService);
   const area = foodAreas.filter(area => area.id === areaId)[0];
   const item = area.items.filter(item => item.id === itemId)[0];
 
@@ -99,6 +101,7 @@ const Basket = ({ match: { params: { areaId, itemId }}, foodAreas, order }) => {
         <Link
           className="Place__change-product"
           to={`/place/${areaId}/${itemId}`}
+          onClick={()=>localStorage.setItem('orderSetting', JSON.stringify({faster: faster, time: time, selfService:selfService}))}
         >
           Изменить
         </Link>
@@ -107,8 +110,8 @@ const Basket = ({ match: { params: { areaId, itemId }}, foodAreas, order }) => {
         <h3>Время:</h3>
         <div className="Place__choice-item">
           <span>Как можно быстрее</span>
-          <Checkbox 
-            checked={faster} 
+          <Checkbox
+            checked={faster}
             onToggle={() => {
               if (faster) {
                 setFaster(false);
